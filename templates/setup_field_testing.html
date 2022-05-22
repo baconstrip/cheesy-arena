@@ -8,22 +8,25 @@
 {{define "body"}}
 <div class="row">
   <div class="col-lg-3">
-    <div class="well">
-      <legend>Game Sounds</legend>
-      {{range $sound := .MatchSounds}}
+    <div class="card">
+      <div class="card-header"><h4>Game Sounds</h4></div>
+      <div class="card-body">
+        {{range $sound := .MatchSounds}}
         <p>
-          <button type="button" class="btn btn-sm btn-info btn-game-sound" onclick="playSound('{{$sound.Name}}');">
-            <i class="glyphicon glyphicon-play"></i>&nbsp;&nbsp;{{toUpper $sound.Name}}
+          <button type="button" class="btn btn-primary btn-game-sound" onclick="playSound('{{$sound.Name}}');">
+            ▶&nbsp;&nbsp;{{toUpper $sound.Name}}
           </button>
         </p>
-      {{end}}
+        {{end}}
+      </div>
     </div>
   </div>
-  <div class="col-lg-7">
-    <div class="well">
-      <legend>PLC</legend>
+  <div class="col-lg">
+    <div class="card">
+      <div class="card-header"><h4>PLC</h4></div>
+      <div class="container">
       <div class="row">
-        <div class="col-lg-4">
+        <div class="col-md-4">
           <table class="table">
             <tr>
               <th colspan="2">Inputs</th>
@@ -36,7 +39,7 @@
             {{end}}
           </table>
         </div>
-        <div class="col-lg-4">
+        <div class="col-md-4">
           <table class="table">
             <tr>
               <th colspan="2">Registers</th>
@@ -49,7 +52,7 @@
             {{end}}
           </table>
         </div>
-        <div class="col-lg-4">
+        <div class="col-md-4">
           <table class="table">
             <tr>
               <th colspan="2">Coils</th>
@@ -62,6 +65,7 @@
             {{end}}
           </table>
         </div>
+      </div>
       </div>
     </div>
   </div>

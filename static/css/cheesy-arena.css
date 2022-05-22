@@ -102,7 +102,7 @@ td[data-plc-value="true"] {
   color: #090;
 }
 .btn-game-sound {
-  width: 110px;
+  width: 100%;
   text-align: left;
 }
 input[data-changed="true"], select[data-changed="true"] {

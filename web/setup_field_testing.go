@@ -7,12 +7,13 @@ package web
 
 import (
 	"fmt"
-	"github.com/Team254/cheesy-arena/game"
-	"github.com/Team254/cheesy-arena/model"
-	"github.com/Team254/cheesy-arena/websocket"
 	"io"
 	"log"
 	"net/http"
+
+	"github.com/Team254/cheesy-arena/game"
+	"github.com/Team254/cheesy-arena/model"
+	"github.com/Team254/cheesy-arena/websocket"
 )
 
 // Shows the Field Testing page.
@@ -21,7 +22,7 @@ func (web *Web) fieldTestingGetHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	template, err := web.parseFiles("templates/setup_field_testing.html", "templates/base.html")
+	template, err := web.parseFiles("templates/setup_field_testing.html", "templates/base_bootstrap5.html")
 	if err != nil {
 		handleWebErr(w, err)
 		return
