@@ -7,12 +7,13 @@ package web
 
 import (
 	"fmt"
-	"github.com/Team254/cheesy-arena/model"
-	"github.com/Team254/cheesy-arena/websocket"
-	"github.com/mitchellh/mapstructure"
 	"io"
 	"log"
 	"net/http"
+
+	"github.com/Team254/cheesy-arena/model"
+	"github.com/Team254/cheesy-arena/websocket"
+	"github.com/mitchellh/mapstructure"
 )
 
 // Shows the lower third configuration page.
@@ -21,7 +22,7 @@ func (web *Web) lowerThirdsGetHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	template, err := web.parseFiles("templates/setup_lower_thirds.html", "templates/base.html")
+	template, err := web.parseFiles("templates/setup_lower_thirds.html", "templates/base_bootstrap5.html")
 	if err != nil {
 		handleWebErr(w, err)
 		return
