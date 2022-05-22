@@ -265,6 +265,13 @@
           <button type="button" id="startTimeout" class="btn btn-info btn-xs" onclick="startTimeout();">
             Start
           </button>
+          <!-- Vertical spacer -->
+          <div style="height: 70px"></div>
+          <button type="button" id="forceReset" onclick="forceReset();" class="btn btn-info btn-sm">
+            Force Reset Lights</button>
+          <button type="button" id="toggleAwardsMode" onclick="toggleAwardsMode();" class="btn btn-info btn-sm"
+            style="margin-top: 10px;">
+            Toggle Awards Mode</button>
           {{if eq .Match.Type "test" }}
             <br /><br />
             <p>Match Name</p>

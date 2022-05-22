@@ -406,6 +406,20 @@ var transitionIntroToMatch = function(callback) {
   });
 };
 
+var transitionInMatchToIntro = function(callback) {
+  $(".score-number").transition({queue: false, opacity: 0}, 300, "linear");
+  $(".score-fields").transition({queue: false, opacity: 0}, 300, "ease");
+  $("#matchTime").transition({queue: false, opacity: 0}, 300, "linear", function() {
+    $(".score-fields").transition({queue: false, width: 0}, 500, "ease");
+    $("#logo").transition({queue: false, top: logoDown}, 500, "ease");
+    $(".score").transition({queue: false, width: scoreMid}, 500, "ease", function() {
+      $(".score-fields").hide();
+      $(".avatars").css("display", "flex");
+      $(".avatars").transition({queue: false, opacity: 1}, 500, "ease", callback);
+    });
+  });
+};
+
 var transitionIntroToTimeout = function(callback) {
   $("#eventMatchInfo").transition({queue: false, height: eventMatchInfoUp}, 500, "ease", function() {
     $("#eventMatchInfo").hide();

@@ -7,20 +7,22 @@ package web
 
 import (
 	"fmt"
-	"github.com/Team254/cheesy-arena/bracket"
-	"github.com/Team254/cheesy-arena/field"
-	"github.com/Team254/cheesy-arena/game"
-	"github.com/Team254/cheesy-arena/model"
-	"github.com/Team254/cheesy-arena/tournament"
-	"github.com/Team254/cheesy-arena/websocket"
-	"github.com/gorilla/mux"
-	"github.com/mitchellh/mapstructure"
 	"io"
 	"log"
 	"net/http"
 	"sort"
 	"strconv"
 	"time"
+
+	"github.com/Team254/cheesy-arena/bracket"
+	"github.com/Team254/cheesy-arena/field"
+
+	"github.com/Team254/cheesy-arena/game"
+	"github.com/Team254/cheesy-arena/model"
+	"github.com/Team254/cheesy-arena/tournament"
+	"github.com/Team254/cheesy-arena/websocket"
+	"github.com/gorilla/mux"
+	"github.com/mitchellh/mapstructure"
 )
 
 type MatchPlayListItem struct {
@@ -359,6 +361,12 @@ func (web *Web) matchPlayWebsocketHandler(w http.ResponseWriter, r *http.Request
 				ws.WriteError(err.Error())
 				continue
 			}
+		case "forceReset":
+			web.arena.ForceFieldReset = true
+			log.Println("Forcing field reset lights.")
+			continue
+		case "toggleAwardsMode":
+			web.arena.AwardsMode = !web.arena.AwardsMode
 		case "setTestMatchName":
 			if web.arena.CurrentMatch.Type != "test" {
 				// Don't allow changing the name of a non-test match.

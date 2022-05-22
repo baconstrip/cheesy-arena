@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/Team254/cheesy-arena/bracket"
+
 	"github.com/Team254/cheesy-arena/game"
 	"github.com/Team254/cheesy-arena/model"
 	"github.com/Team254/cheesy-arena/network"
@@ -80,6 +81,8 @@ type Arena struct {
 	MuteMatchSounds            bool
 	matchAborted               bool
 	soundsPlayed               map[*game.MatchSound]struct{}
+	ForceFieldReset            bool
+	AwardsMode                 bool
 }
 
 type AllianceStation struct {
@@ -540,6 +543,20 @@ func (arena *Arena) Update() {
 		}
 	}
 
+	switch arena.MatchState {
+	case PostMatch:
+		fallthrough
+	case PreMatch:
+		fallthrough
+	case TimeoutActive:
+		fallthrough
+	case PostTimeout:
+		if arena.ForceFieldReset {
+			arena.AllianceStationDisplayMode = "fieldReset"
+			arena.AllianceStationDisplayModeNotifier.Notify()
+		}
+	}
+
 	// Send a match tick notification if passing an integer second threshold or if the match state changed.
 	if int(matchTimeSec) != int(arena.LastMatchTimeSec) || arena.MatchState != arena.lastMatchState {
 		arena.MatchTimeNotifier.Notify()
@@ -853,8 +870,12 @@ func (arena *Arena) handlePlcOutput() {
 		if redAllianceReady && blueAllianceReady {
 			arena.Plc.SetFieldResetLight(false)
 		}
+
+		if arena.ForceFieldReset {
+			arena.Plc.SetFieldResetLight(true)
+		}
 	case PostMatch:
-		if arena.FieldReset {
+		if arena.FieldReset || arena.ForceFieldReset {
 			arena.Plc.SetFieldResetLight(true)
 		}
 		scoreReady := arena.RedRealtimeScore.FoulsCommitted && arena.BlueRealtimeScore.FoulsCommitted &&
