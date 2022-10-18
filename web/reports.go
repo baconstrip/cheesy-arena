@@ -9,16 +9,14 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"net/http"
-	"regexp"
-	"strconv"
-
 	"github.com/Team254/cheesy-arena/bracket"
 	"github.com/Team254/cheesy-arena/game"
 	"github.com/Team254/cheesy-arena/model"
 	"github.com/Team254/cheesy-arena/tournament"
 	"github.com/gorilla/mux"
 	"github.com/jung-kurt/gofpdf"
+	"net/http"
+	"strconv"
 )
 
 // Generates a CSV-formatted report of the qualification rankings.
@@ -574,8 +572,6 @@ func (web *Web) teamsPdfReportHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-var eventCodeRegexp = regexp.MustCompile("[0-9]*(.*)")
-
 // Generates a CSV-formatted report of the WPA keys, for import into the radio kiosk.
 func (web *Web) wpaKeysCsvReportHandler(w http.ResponseWriter, r *http.Request) {
 	if !web.userIsAdmin(w, r) {
@@ -588,30 +584,8 @@ func (web *Web) wpaKeysCsvReportHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	settings, err := web.arena.Database.GetEventSettings()
-	if err != nil {
-		handleWebErr(w, err)
-		return
-	}
-
-	var filename string
-	tbaCode := settings.TbaEventCode
-	name := settings.Name
-	if tbaCode != "" {
-		// If we use the event code, scrub the leading digits. This creates
-		// the filenames that the WPA kiosk will expect, e.g. 2022CACC becomes
-		// CACC.
-		filename = eventCodeRegexp.FindStringSubmatch(tbaCode)[1]
-	} else if name != "" {
-		filename = name
-	} else {
-		filename = "default"
-	}
-
-	filename = filename + ".wpa_keys.csv"
-
 	w.Header().Set("Content-Type", "text/csv")
-	w.Header().Set("Content-Disposition", "attachment; filename="+filename)
+	w.Header().Set("Content-Disposition", "attachment; filename=wpa_keys.csv")
 	for _, team := range teams {
 		_, err := w.Write([]byte(fmt.Sprintf("%d,%s\r\n", team.Id, team.WpaKey)))
 		if err != nil {
