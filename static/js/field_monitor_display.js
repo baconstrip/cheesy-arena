@@ -9,7 +9,7 @@ var redSide;
 var blueSide;
 var lowBatteryThreshold = 8;
 
-// Handles a websocket message to update the team connection status.
+
 var handleArenaStatus = function(data) {
   // If getting data for the wrong match (e.g. after a server restart), reload the page.
   if (currentMatchId == null) {
@@ -95,7 +95,7 @@ var handleArenaStatus = function(data) {
       } else {
         teamRobotElement.text(dsConn.BatteryVoltage.toFixed(1) + "V");
       }
-
+      console.log(dsConn.Bandwidth);
       if (dsConn.Bandwidth > 0.01) {
         teamBandwidthElement.text(dsConn.Bandwidth.toFixed(1));
         teamBandwidthElement.attr("data-status-ok", true);
@@ -141,13 +141,20 @@ var handleMatchTime = function(data) {
   translateMatchTime(data, function(matchState, matchStateText, countdownSec) {
     $("#matchState").text(matchStateText);
     $("#matchTime").text(countdownSec);
-  });
+    });
 };
 
 // Handles a websocket message to update the match score.
-var handleRealtimeScore = function(data) {
-  $("#redScore").text(data.Red.ScoreSummary.Score);
-  $("#blueScore").text(data.Blue.ScoreSummary.Score);
+var handleRealtimeScore = function(data,reversed) {
+
+    if (reversed === "true") {
+      $("#rightScore").text(data.Red.ScoreSummary.Score);
+      $("#leftScore").text(data.Blue.ScoreSummary.Score);
+    } else {
+      $("#rightScore").text(data.Blue.ScoreSummary.Score);
+      $("#leftScore").text(data.Red.ScoreSummary.Score);
+
+    }
 };
 
 // Handles a websocket message to update current match
@@ -199,9 +206,9 @@ $(function() {
   websocket = new CheesyWebsocket("/displays/field_monitor/websocket", {
     arenaStatus: function(event) { handleArenaStatus(event.data); },
     eventStatus: function(event) { handleEventStatus(event.data); },
-	matchLoad: function(event) { handleMatchLoad(event.data); },
+    matchLoad: function(event) { handleMatchLoad(event.data); },
+    matchTiming: function(event) { handleMatchTiming(event.data); },
     matchTime: function(event) { handleMatchTime(event.data); },
-	matchTiming: function(event) { handleMatchTiming(event.data); },
-    realtimeScore: function(event) { handleRealtimeScore(event.data); },
+    realtimeScore: function(event) { handleRealtimeScore(event.data,reversed); },
   });
 });

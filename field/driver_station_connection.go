@@ -108,6 +108,17 @@ func (arena *Arena) listenForDsUdpPackets() {
 
 				// Robot battery voltage, stored as volts * 256.
 				dsConn.BatteryVoltage = float64(data[6]) + float64(data[7])/256
+
+			        rawBw := data[9:11]
+
+			        bw := uint16(rawBw[0]) << 8
+			        bw |= uint16(rawBw[1])
+
+			        dsConn.Bandwidth = float32(bw) / 256.0
+
+
+
+
 			}
 		}
 	}
@@ -273,11 +284,6 @@ func (dsConn *DriverStationConnection) decodeStatusPacket(data [36]byte) {
 	// Number of missed packets sent from the DS to the robot.
 	dsConn.MissedPacketCount = int(data[2]) - dsConn.missedPacketOffset
 
-	rawBw := data[9:11]
-	bw := uint16(rawBw[0]) << 8
-	bw |= uint16(rawBw[1])
-
-	dsConn.Bandwidth = float32(bw) / 256.0
 }
 
 // Listens for TCP connection requests to Cheesy Arena from driver stations.
