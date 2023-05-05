@@ -271,6 +271,7 @@ func (dsConn *DriverStationConnection) decodeStatusPacket(data [36]byte) {
 
 	// Number of missed packets sent from the DS to the robot.
 	dsConn.MissedPacketCount = int(data[2]) - dsConn.missedPacketOffset
+
 }
 
 // Listens for TCP connection requests to Cheesy Arena from driver stations.
